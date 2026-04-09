@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple STT</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="vendor/vuetify.min.css" rel="stylesheet">
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+      }
+
+      :root {
+        --simple-stt-primary: #5876ad;
+        --simple-stt-accent: #7ee476;
+        --simple-stt-error: #d86464;
+        --simple-stt-warning: #f0b25b;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #121212;
+      }
+
+      .simple-stt-card {
+        width: min(100%, 1040px);
+      }
+
+      .simple-stt-brand {
+        min-width: 0;
+      }
+
+      .simple-stt-logo {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .simple-stt-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .transcript-textarea {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+
+      .transcript-textarea .v-input__control,
+      .transcript-textarea .v-input__slot,
+      .transcript-textarea .v-text-field__slot {
+        min-height: 0;
+      }
+
+      .transcript-textarea textarea {
+        min-height: clamp(280px, 40vh, 460px) !important;
+        max-height: calc(100vh - 340px) !important;
+        overflow-y: auto !important;
+        resize: none !important;
+        font-size: 1.05rem !important;
+        line-height: 1.5 !important;
+        padding-bottom: 10px !important;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.22) rgba(255, 255, 255, 0.06);
+      }
+
+      .transcript-textarea.v-input--is-focused .v-input__control .v-input__slot fieldset {
+        border-color: color-mix(in srgb, var(--simple-stt-accent) 82%, transparent) !important;
+      }
+
+      .transcript-textarea.v-input--is-focused .v-input__control .v-input__slot {
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--simple-stt-accent) 16%, transparent);
+      }
+
+      .active-field-switch .v-input--switch__track {
+        color: var(--simple-stt-accent) !important;
+      }
+
+      .active-field-switch .v-input__slot {
+        margin-bottom: 0 !important;
+      }
+
+      .active-field-switch .v-input--selection-controls__input {
+        margin-right: 0 !important;
+      }
+
+      .transcript-textarea textarea::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .transcript-textarea textarea::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .transcript-textarea textarea::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        border: 2px solid rgba(0, 0, 0, 0);
+        background-clip: padding-box;
+      }
+
+      .status-strip {
+        gap: 8px;
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        flex: 0 0 auto;
+      }
+
+      .status-dot.status-idle {
+        background: rgba(255, 255, 255, 0.38);
+      }
+
+      .status-dot.status-active {
+        background: var(--simple-stt-error);
+      }
+
+      .status-dot.status-warning {
+        background: var(--simple-stt-warning);
+      }
+
+      .status-chip {
+        background: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        color: rgba(255, 255, 255, 0.72) !important;
+      }
+
+      .status-chip::before {
+        background: transparent !important;
+        opacity: 0 !important;
+      }
+
+      .status-chip .v-chip__content {
+        color: inherit !important;
+      }
+
+      .status-chip.v-chip,
+      .status-chip.v-chip.v-chip--outlined::before {
+        border-color: rgba(255, 255, 255, 0.09) !important;
+        opacity: 1 !important;
+      }
+
+      .simple-stt-divider {
+        border-color: rgba(255, 255, 255, 0.09) !important;
+        opacity: 1 !important;
+      }
+
+      .simple-stt-card.v-sheet.v-sheet--outlined {
+        background-color: #1e1e1e !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0) !important;
+      }
+
+      .simple-stt-card.v-sheet.v-sheet--outlined::after,
+      .simple-stt-card.v-sheet.v-sheet--outlined::before {
+        border-color: rgba(255, 255, 255, 0) !important;
+      }
+
+      .composer-controls {
+        gap: 4px;
+      }
+
+      @media (max-width: 760px) {
+        .transcript-textarea textarea {
+          min-height: 240px !important;
+          max-height: calc(100vh - 360px) !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="vendor/vue.runtime.js"></script>
+    <script src="vendor/vuetify.js"></script>
+    <script src="lib/commands.js"></script>
+    <script src="lib/hotkeys.js"></script>
+    <script src="lib/settings-schema.js"></script>
+    <script src="lib/transcript-engine.js"></script>
+    <script src="lib/speech-session.js"></script>
+    <script src="lib/clipboard.js"></script>
+    <script src="lib/speech-errors.js"></script>
+    <script src="lib/speech-reader.js"></script>
+    <script src="active-field.js"></script>
+    <script src="components/app-brand.js"></script>
+    <script src="components/transcript-controls.js"></script>
+    <script src="components/app-top-bar.js"></script>
+    <script src="components/composer-field.js"></script>
+    <script src="components/reader-controls.js"></script>
+    <script src="components/composer-controls.js"></script>
+    <script src="components/app-status.js"></script>
+    <script src="components/app-bottom-bar.js"></script>
+    <script src="components/app-shell.js"></script>
+    <script src="settings.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

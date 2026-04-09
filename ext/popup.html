@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple STT</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="vendor/vuetify.min.css" rel="stylesheet">
+    <style>
+      html,
+      body,
+      #app {
+        width: 360px;
+        min-width: 360px;
+        min-height: 220px;
+      }
+
+      :root {
+        --simple-stt-primary: #5876ad;
+        --simple-stt-accent: #7ee476;
+        --simple-stt-error: #d86464;
+        --simple-stt-warning: #f0b25b;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .popup-shell {
+        min-height: 220px;
+      }
+
+      .popup-card {
+        width: 100%;
+      }
+
+      .popup-brand {
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .popup-logo {
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        display: block;
+      }
+    </style>
+    <script src="vendor/vue.runtime.js"></script>
+    <script src="vendor/vuetify.js"></script>
+    <script src="lib/hotkeys.js"></script>
+    <script src="lib/settings-schema.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="settings.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
